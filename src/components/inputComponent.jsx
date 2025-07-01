@@ -1,26 +1,24 @@
 import React from "react";
-import {
-  Form,
-  Input,
-  Button,
-} from "@heroui/react";
+import { Form, Input, Button } from "@heroui/react";
 
-export default function App() {
+// ...existing code...
+export default function InputComponent({ tasks = [], setTasks }) {
   const [submitted, setSubmitted] = React.useState(null);
   const [errors, setErrors] = React.useState({});
 
   const onSubmit = (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget));
-
-    // Clear errors and submit
-    setErrors({});
     setSubmitted(data);
+    if (setTasks) {
+      setTasks([...tasks, data]);
+    }
+    e.target.reset();
   };
 
   return (
     <Form
-      className="w-full justify-center pb-[50px]  items-center space-y-4"
+      className="w-full justify-center pb-[50px] items-center space-y-4"
       validationErrors={errors}
       onReset={() => setSubmitted(null)}
       onSubmit={onSubmit}
@@ -32,12 +30,11 @@ export default function App() {
             if (validationDetails.valueMissing) {
               return "Please Add your Task ";
             }
-
-            return errors.name;
+            return errors.Task;
           }}
           className="w-[80%]"
           labelPlacement="outside"
-          name="name"
+          name="Task"
           placeholder="Please Add your Task "
         />
 
@@ -55,12 +52,6 @@ export default function App() {
           </Button>
         </div>
       </div>
-
-      {submitted && (
-        <div className="text-small text-default-500 mt-4">
-          Submitted data: <pre>{JSON.stringify(submitted, null, 2)}</pre>
-        </div>
-      )}
     </Form>
   );
 }
