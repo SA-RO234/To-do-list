@@ -1,19 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button } from "@heroui/react";
 
-// ...existing code...
-export default function InputComponent({ tasks = [], setTasks }) {
-  const [submitted, setSubmitted] = React.useState(null);
-  const [errors, setErrors] = React.useState({});
+export default function InputComponent({
+  tasks = [],
+  setTasks,
+  editValue,
+  setEditValue,
+}) {
+  const [submitted, setSubmitted] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    if (editValue) {
+      setInput(editValue);
+    }
+  }, [editValue]);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const data = { Task: input };
     setSubmitted(data);
     if (setTasks) {
-      setTasks([...tasks, data]);
+      if (editValue && tasks.some((t) => t.Task === editValue)) {
+        const updatedTasks = tasks.map((t) =>
+          t.Task === editValue ? { ...t, Task: input } : t
+        );
+        setTasks(updatedTasks);
+      } else {
+        setTasks([...tasks, data]);
+      }
     }
-    e.target.reset();
+    setInput("");
+    if (setEditValue) setEditValue("");
   };
 
   return (
@@ -32,10 +51,12 @@ export default function InputComponent({ tasks = [], setTasks }) {
             }
             return errors.Task;
           }}
-          className="w-[80%]"
+          className="w-[70%]"
           labelPlacement="outside"
           name="Task"
           placeholder="Please Add your Task "
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
 
         {errors.terms && (
@@ -48,7 +69,7 @@ export default function InputComponent({ tasks = [], setTasks }) {
             color="primary"
             type="submit"
           >
-            Add Task
+            {editValue ? "Update Task" : "Add Task"}
           </Button>
         </div>
       </div>

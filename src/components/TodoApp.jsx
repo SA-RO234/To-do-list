@@ -20,12 +20,22 @@ const TodoApp = () => {
     localStorage.setItem("Task", JSON.stringify(tasks));
   }, [tasks]);
 
+  const [editValue, setEditValue] = useState("");
   return (
     <div className="container-fluid m-auto select-none flex justify-center items-center h-full pt-[100px] ">
       <div className="w-[50%] border-b-2 pb-10 border-white text-white h-full flex justify-center items-center flex-col m-auto ">
-        <TotalTask />
-        <InputComponent tasks={tasks} setTasks={setTasks} />
-        <TableComponent tasks={tasks} setTasks={setTasks} />
+        <TotalTask tasks={tasks} />
+        <InputComponent
+          tasks={tasks}
+          setTasks={setTasks}
+          editValue={editValue}
+          setEditValue={setEditValue}
+        />
+        <TableComponent
+          tasks={tasks}
+          setTasks={setTasks}
+          setEditValue={setEditValue}
+        />
       </div>
     </div>
   );
