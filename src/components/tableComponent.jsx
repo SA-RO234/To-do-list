@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-const TableComponent = ({ tasks = [], setTasks, setEditValue }) => {
+const TableComponent = ({ tasks = [], setTasks, setEditValue, onComplete }) => {
   const completeTask = (taskName) => {
-    if (!Array.isArray(tasks)) return;
-    const filtered = tasks.filter((item) => item.Task !== taskName);
-    setTasks(filtered);
+    if (onComplete) {
+      onComplete(taskName);
+    } else {
+      if (!Array.isArray(tasks)) return;
+      const filtered = tasks.filter((item) => item.Task !== taskName);
+      setTasks(filtered);
+    }
   };
   const EditTask = (taskName) => {
     if (setEditValue) setEditValue(taskName);

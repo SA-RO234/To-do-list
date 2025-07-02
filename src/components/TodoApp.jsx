@@ -20,11 +20,19 @@ const TodoApp = () => {
     localStorage.setItem("Task", JSON.stringify(tasks));
   }, [tasks]);
 
+  const [completedCount, setCompletedCount] = useState(0);
   const [editValue, setEditValue] = useState("");
+  const handleComplete = (taskName) => {
+    setTasks((prev) => {
+      const filtered = prev.filter((item) => item.Task !== taskName);
+      setCompletedCount((c) => c + 1);
+      return filtered;
+    });
+  };
   return (
     <div className="container-fluid m-auto select-none flex justify-center items-center h-full pt-[100px] ">
       <div className="w-[50%] border-b-2 pb-10 border-white text-white h-full flex justify-center items-center flex-col m-auto ">
-        <TotalTask tasks={tasks} />
+        <TotalTask tasks={tasks} completedCount={completedCount} />
         <InputComponent
           tasks={tasks}
           setTasks={setTasks}
@@ -35,6 +43,7 @@ const TodoApp = () => {
           tasks={tasks}
           setTasks={setTasks}
           setEditValue={setEditValue}
+          onComplete={handleComplete}
         />
       </div>
     </div>
